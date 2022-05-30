@@ -10,7 +10,7 @@ __version__ = (2,0,1)
 #█░▀░█ ██▄ █▄█ ▀▄▀▄▀
 
 # you can edit this module
-
+#meta developer: @skillzmeow
 #2022
 
 
