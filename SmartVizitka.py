@@ -82,7 +82,7 @@ class MyInformationMod(loader.Module):
     @loader.unrestricted
 
     async def vizcmd(self, message: Message):
-        """special thx apocodium modules"""
+        """special thx @apodiktum_modules"""
         await self.inline.form(
             message=message,
             text = self.config["message"],
