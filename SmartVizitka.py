@@ -48,7 +48,7 @@ class MyInformationMod(loader.Module):
 
                 loader.ConfigValue(
 
-                    "image_url",
+                    "file_url",
 
                     "https://i.imgur.com/RSq64Xu.jpeg",
 
@@ -89,5 +89,5 @@ class MyInformationMod(loader.Module):
             reply_markup=self._get_mark(),
             **{}
             if self.config["disable_banner"]
-            else {self.config["custom_format"]: self.config["image_url"]}
+            else {self.config["custom_format"]: self.config["file_url"]}
         )
