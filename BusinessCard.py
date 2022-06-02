@@ -8,7 +8,7 @@ __version__ = (2, 0, 2)
 # █▀▄▀█ █▀▀ █▀█ █░█░█
 # █░▀░█ ██▄ █▄█ ▀▄▀▄▀
 
-# meta developers: @skillzmeow | @anon97945
+# meta developer: @skillzmeow, @anon97945
 
 # you can edit this module
 # 2022
