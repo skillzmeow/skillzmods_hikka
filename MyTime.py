@@ -1,17 +1,17 @@
-__version__ = (2, 0, 0)
+__version__ = (2, 0, 1)
+
 # module by:
 # █▀ █▄▀ █ █░░ █░░ ▀█
 # ▄█ █░█ █ █▄▄ █▄▄ █▄
 
 # █▀▄▀█ █▀▀ █▀█ █░█░█
 # █░▀░█ ██▄ █▄█ ▀▄▀▄▀
-# you can edit this module
-# 2022
+#   you can edit this module
+#            2022
+# 🔒 Licensed under the GNU GPLv3
+# 🌐 https://www.gnu.org/licenses/agpl-3.0.html
 
-# requires: pytz
-# scope: hikka_only
-# meta developer: @skillzmeow
-# 
+# meta developer: @smeowcodes
 
 import logging
 
@@ -23,8 +23,10 @@ from telethon.tl.types import Message
 
 import random
 
-import datetime
+import datetime as d
 import pytz
+
+import calendar as c
 
 from pytz import timezone
 
@@ -44,8 +46,11 @@ class MyTimeMod(loader.Module):
         "date": "📆 Date",
         "open_manager": "📓 Open manager",
         "expected_date": "😀 Expected date",
+        "calendar": "🗓 Calendar",
         "ss": "{} days, {} hours, {} minutes.",
         "wyc": "What you choose?😅",
+        "days": "Mon, Tue, Wed, Thu, Fri, Sat, Sun",
+        "month": "January, February, March, April, May, June, July, August, September, October, November, December",
     }
     strings_ru = {
         "time": "📡 Точное время",
@@ -57,8 +62,11 @@ class MyTimeMod(loader.Module):
         "date": "📆 Дата",
         "open_manager": "📓 Открыть менеджер",
         "expected_date": "😀 Ожидаемая дата",
+        "calendar": "🗓 Календарь",
         "ss": "{} дней, {} часов, {} минут.",
         "wyc": "Что выберешь?😅",
+        "days": "Пн , Вт , Ср , Чт , Пт , Сб , Вс ",
+        "month": "Январь, Февраль, Март, Апрель, Май, Июнь, Июль, Август, Сентябрь, Октябрь, Ноябрь, Декабрь",
     }
     strings_ua = {
         "time": "📡 Точний час",
@@ -70,8 +78,11 @@ class MyTimeMod(loader.Module):
         "date": "📆 Дата",
         "open_manager": "📓 Відкрити менеджер",
         "expected_date": "😀 Очікувана дата",
+        "calendar": "🗓 Календар",
         "ss": "{} днів, {} годин, {} хвилин",
         "wyc": "Що вибереш?😅",
+        "days": "Пн , Вт , Ср , Чт , Пт , Сб , Нд ",
+        "month": "Січень, Лютий, Березень, Квітень, Травень, Червень, Липень, Серпень, Вересень, Жовтень, Листопад",
     }
 
     def __init__(self):
@@ -99,10 +110,7 @@ class MyTimeMod(loader.Module):
     
     @loader.unrestricted
     async def mytimecmd(self, message: Message):
-        """
-            
-        Command manager
-        """
+        "open a manager"
         list = ["модуль от скиллза", "в хикке только кнопочки и смайлики...", "че за хрень?", "хочу фтг", "ваша сессия спижжена скилзом"]
         hz = random.choice(list)
         args = utils.get_args_raw(message)
@@ -178,7 +186,38 @@ class MyTimeMod(loader.Module):
         return (
             {"text": "больше модулей здесь", "url": "https://t.me/smeowcodes"}
         )
-
+    async def calendar_call(self, call: InlineCall):
+        mesaca = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        
+        da = d.datetime.now()
+        mo = da.strftime("%m")
+        mont = int(mo.lstrip("0"))
+        year = int(da.strftime("%Y"))
+        list_month = self.strings("month").split(", ")
+        name_month = c.month_name[int(mo)]
+        index = mesaca.index(name_month)
+        namemonth = list_month[index]
+            
+        b = c.monthcalendar(year, mont)
+        
+        days = self.strings("days").split(", ")
+        
+        form = " ".join(days)+"\n"+"\n".join("  ".join(' •' if i == 0 else str(i) if len(str(i)) == 2 else ' '+str(i) for i in x) for x in b)
+        await call.edit(
+            text=f"<b>🗓 {namemonth} {year}</b>\n<code>{form}</code>",
+            reply_markup=[
+                [
+                    {
+                        "text": self.strings("back_btn"),
+                        "callback": self.back_btn,
+                    },
+                    {
+                        "text": self.strings("cancel_btn"),
+                        "callback": self.cancel,
+                    },
+                ],
+            ],
+        )
     async def timezonescmd(self, message: Message):
     	await self.inline.form(
     		message=message,
@@ -189,8 +228,9 @@ class MyTimeMod(loader.Module):
             ),
     	)
     async def back_btn(self, call: InlineCall):
-    	await call.edit(
-    		text=f"<b>{self.strings('wyc')}</b>",
+        
+        await call.edit(
+            text=f"<b>{self.strings('wyc')}</b>",
             reply_markup=[
                 [
                     {
@@ -202,6 +242,7 @@ class MyTimeMod(loader.Module):
                         "callback": self.expectedtime_call,
                     },
                 ],
+                [{"text": self.strings("calendar"), "callback": self.calendar_call}],
                 [{"text": self.strings("cancel_btn"), "callback": self.cancel}],
             ],
         )
