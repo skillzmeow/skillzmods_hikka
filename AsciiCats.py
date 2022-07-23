@@ -170,7 +170,7 @@ class AsciiCatsMod(loader.Module):
         "send a cute cat arts"
         cats = [
             (
-                "ᅠ ᅠ  ᅠn"
+                "ᅠ ᅠ  ᅠ\n"
                 "|\---/| \n"
                 "| o_o | \n"
                 " \_^_/ \n"
@@ -215,7 +215,7 @@ class AsciiCatsMod(loader.Module):
                 "ᅠ ᅠ ᅠᅠ ᅠ"
             ),
             (
-                "ᅠ ᅠ ᅠᅠ ᅠ ᅠᅠ ᅠn"
+                "ᅠ ᅠ ᅠᅠ ᅠ ᅠᅠ ᅠ\n"
                 " |\__/,|   (`\ \n"
                 " |_ _  |.--.) ) \n"
                 " ( T   )     / \n"
