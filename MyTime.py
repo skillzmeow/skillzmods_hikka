@@ -23,7 +23,7 @@ from telethon.tl.types import Message
 
 import random
 
-import datetime as d
+import datetime
 import pytz
 
 import calendar as c
@@ -189,7 +189,7 @@ class MyTimeMod(loader.Module):
     async def calendar_call(self, call: InlineCall):
         mesaca = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         
-        da = d.datetime.now()
+        da = datetime.datetime.now()
         mo = da.strftime("%m")
         mont = int(mo.lstrip("0"))
         year = int(da.strftime("%Y"))
