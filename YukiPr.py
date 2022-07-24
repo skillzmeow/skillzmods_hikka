@@ -102,7 +102,7 @@ class YukiMod(loader.Module):
         yuka = self.db.get("yuki", "droch", "")
         if yuka == "":
             self.db.set("yuki", "droch", 1)
-        if yuka >= 1:
+        if int(yuka) >= 1:
             s = int(yuka) + 1
             self.db.set("yuki", "droch", s)
         await call.edit(
