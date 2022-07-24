@@ -80,5 +80,6 @@ class AntiRacismMod(loader.Module):
             return
         if status == True:
             for i in word:
-                if i in text.lower():
+                s = text.lower().find(i)
+                if s != -1:
                     await message.delete()
