@@ -2,3 +2,4 @@ Pinger
 BusinessCard
 MyTime
 AsciiCats
+YukiPr
