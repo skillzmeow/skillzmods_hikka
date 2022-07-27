@@ -17,46 +17,60 @@ __version__ = (0, 0, 2)
 from .. import loader, utils
 from telethon.tl.types import Message
 import requests
+import random as r
 
 
 class MeowCryptoManagerMod(loader.Module):
-    """Perfectly crypto manager"""
+    """Awesome cryptocurrency viewer"""
 
     strings = {
         "name": "MeowCrypto",
-        "bid_rate": "bid rate",
         "inc_args": "<b>🐳 Incorrect args</b>",
+        "keyerror": "🗿 <b>Maybe the coin is not in the site database or you typed the wrong name</b>",
     }
     strings_ru = {
-        "bid_rate": "ст. по цене покупки",
         "inc_args": "<b>🐳 Неккоректные аргументы</b>",
+        "keyerror": "🗿 <b>Возможно монеты нету в базе данных сайта, или вы ввели неккоректное название</b>",
     }
 
     async def cryptocmd(self, message: Message):
-        "shows a coins price, use int or float numbers."
+        "use .crypto <count (float or int)> <coin name>. defolt is '1 BTC'"
         args = utils.get_args_raw(message)
-        api_btc = requests.get("https://www.blockchain.com/ru/ticker").json()
-        api_privat = requests.get(
-            "https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11"
-        ).json()
+        if not args:
+            args = "1 BTC"
+
+        args_list = args.split(" ")
         try:
-            if not args:
-                args = 0
-            fargs = float(args)
-            if not args:
-                fargs = 1
-            form = (
-                "💸 <b>{} BITCOIN</b> <em>({})</em>\n"
-                "🇺🇸 <code>{}$</code>\n"
-                "🇷🇺 <code>{}₽</code>\n"
-                "🇺🇦 <code>{}₴</code>\n"
-            ).format(
-                round(fargs, 10),
-                self.strings("bid_rate"),
-                round(api_btc["USD"]["buy"] * fargs, 2),
-                round(api_btc["RUB"]["buy"] * fargs, 2),
-                round(float(api_privat[1]["buy"]) * api_btc["USD"]["buy"] * fargs, 2),
-            )
-            await utils.answer(message, form)
+            if len(args_list) == 1 and isinstance(float(args_list[0]), float) == True:
+                args_list.append("BTC")
+        except Exception:
+            args_list = ["1", args_list[0]]
+        coin = args_list[1].upper()
+        api = requests.get(
+            f"https://min-api.cryptocompare.com/data/price?fsym={coin}&tsyms=USD,RUB,UAH,KZT"
+        ).json()
+        smile = "💷 💶 💴 💵".split(" ")
+        smiles = r.choice(smile)
+        try:
+            try:
+                count = float(args_list[0])
+                form = (
+                    "{} <b>{} {}</b>\n"
+                    "🇺🇸 <code>{}$</code>\n"
+                    "🇷🇺 <code>{}₽</code>\n"
+                    "🇺🇦 <code>{}₴</code>\n"
+                    "🇰🇿 <code>{}₸</code>"
+                ).format(
+                    smiles,
+                    count,
+                    coin,
+                    round(api["USD"] * count, 2),
+                    round(api["RUB"] * count, 2),
+                    round(api["UAH"] * count, 2),
+                    round(api["KZT"] * count, 2),
+                )
+                await utils.answer(message, form)
+            except KeyError:
+                await utils.answer(message, self.strings("keyerror"))
         except ValueError:
             await utils.answer(message, self.strings("inc_args"))
